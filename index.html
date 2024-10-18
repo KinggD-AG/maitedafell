@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frase de Amor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(to right, #ffcccb, #ffe5e5); /* Degradado rosado */
+            color: black;
+            text-align: center;
+            animation: backgroundChange 10s infinite alternate; /* Fondo animado */
+            position: relative; /* Necesario para los corazones */
+            border: 10px solid gold; /* Marco dorado */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); /* Sombra suave */
+        }
+        @keyframes backgroundChange {
+            0% { background: linear-gradient(to right, #ffcccb, #ffe5e5); }
+            50% { background: linear-gradient(to right, #ffe5b4, #ffcccb); }
+            100% { background: linear-gradient(to right, #b4e1ff, #ffe5b4); }
+        }
+        .hidden {
+            display: none;
+        }
+        .hearts {
+            position: absolute;
+            cursor: pointer; /* Cambiar el cursor al pasar sobre el corazón */
+            animation: float 3s infinite; /* Animación de flotación */
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes disappear {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-30px); }
+        }
+        .message {
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .big-message {
+            font-size: 3rem;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .big-message.visible {
+            display: block;
+            opacity: 1;
+            position: relative;
+            z-index: 1; /* Para que esté encima de los corazones */
+        }
+        .popup-message {
+            position: absolute;
+            font-size: 1.5rem;
+            color: red;
+            animation: fadeInOut 2s forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .dedicatoria {
+            font-size: 2rem;
+            font-style: italic; /* Cursiva */
+            position: absolute;
+            top: 10%;
+            opacity: 0;
+            animation: fadeIn 3s forwards; /* Efecto de aparición */
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dedicatoria">Maite Belen del Carmen Sabat Nuñez</div>
+    <div class="message" id="initialMessage">Mi niñita eres tú?</div>
+    <div class="big-message" id="bigMessage">Te amo muchísimo...</div>
+
+    <script>
+        const initialMessage = document.getElementById('initialMessage');
+        const bigMessage = document.getElementById('bigMessage');
+
+        // Nuevas frases de amor
+        const phrases = [
+            "Mi pelirroja linda.",
+            "Mi niñita inteligente.",
+            "Mi princesa lindita hermosa bella."
+        ];
+
+        // Mensajes al hacer clic en los corazones
+        const heartMessages = [
+            "Te amo",
+            "Eres mi princesa",
+            "Eres mi regalona",
+            "Mi pelirroja"
+        ];
+
+        initialMessage.addEventListener('click', () => {
+            document.body.style.backgroundColor = '#ffcccb'; // Fondo rosado pastel
+            initialMessage.classList.add('hidden');
+            bigMessage.classList.add('visible');
+
+            // Elegir una frase aleatoria
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            bigMessage.textContent = randomPhrase;
+
+            // Crear corazones alrededor del mensaje
+            for (let i = 0; i < 20; i++) { // Aumentar la cantidad de corazones
+                const heart = document.createElement('div');
+                heart.classList.add('hearts');
+                heart.innerHTML = '❤️'; // Cambié a un corazón en texto
+                heart.style.left = Math.random() * (window.innerWidth - 50) + 'px'; // Espacio para que no se salgan
+                heart.style.top = Math.random() * (window.innerHeight - 50) + 'px'; // Espacio para que no se salgan
+                
+                // Hacer que el corazón se desintegre al hacer clic
+                heart.addEventListener('click', () => {
+                    const message = document.createElement('div');
+                    message.className = 'popup-message';
+                    message.textContent = heartMessages[Math.floor(Math.random() * heartMessages.length)];
+                    message.style.left = heart.style.left;
+                    message.style.top = heart.style.top;
+                    document.body.appendChild(message);
+
+                    heart.style.animation = 'disappear 1s forwards'; // Desaparece elegantemente
+                    setTimeout(() => heart.remove(), 1000); // Eliminar después de la animación
+                });
+
+                document.body.appendChild(heart);
+            }
+        });
+    </script>
+</body>
+</html>
